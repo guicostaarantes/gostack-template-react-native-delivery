@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Image } from 'react-native';
 
+import { Favorite } from './interfaces';
 import api from '../../services/api';
 import formatValue from '../../utils/formatValue';
 
@@ -18,21 +19,13 @@ import {
   FoodPricing,
 } from './styles';
 
-interface Food {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  thumbnail_url: string;
-  formattedPrice: string;
-}
-
 const Favorites: React.FC = () => {
-  const [favorites, setFavorites] = useState<Food[]>([]);
+  const [favorites, setFavorites] = useState<Favorite[]>([]);
 
   useEffect(() => {
     async function loadFavorites(): Promise<void> {
-      // Load favorite foods from api
+      const { data } = await api.get<Favorite[]>('favorites');
+      setFavorites(data);
     }
 
     loadFavorites();
@@ -43,7 +36,6 @@ const Favorites: React.FC = () => {
       <Header>
         <HeaderTitle>Meus favoritos</HeaderTitle>
       </Header>
-
       <FoodsContainer>
         <FoodList
           data={favorites}
@@ -59,7 +51,7 @@ const Favorites: React.FC = () => {
               <FoodContent>
                 <FoodTitle>{item.name}</FoodTitle>
                 <FoodDescription>{item.description}</FoodDescription>
-                <FoodPricing>{item.formattedPrice}</FoodPricing>
+                <FoodPricing>{formatValue(item.price)}</FoodPricing>
               </FoodContent>
             </Food>
           )}
