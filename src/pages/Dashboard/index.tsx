@@ -35,19 +35,6 @@ interface Food {
   price: number;
   category: number;
   thumbnail_url: string;
-  formattedPrice: string;
-  showing: boolean;
-}
-
-interface APIFood {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  category: number;
-  image_url: string;
-  thumbnail_url: string;
-  extras: { id: number; name: string; value: number }[];
 }
 
 interface Category {
@@ -79,12 +66,7 @@ const Dashboard: React.FC = () => {
         },
       });
 
-      const formatFood = data.map(food => ({
-        ...food,
-        formattedPrice: formatValue(food.price),
-      }));
-
-      setFoods(formatFood);
+      setFoods(data);
     }
 
     loadFoods();
@@ -172,7 +154,7 @@ const Dashboard: React.FC = () => {
                 <FoodContent>
                   <FoodTitle>{food.name}</FoodTitle>
                   <FoodDescription>{food.description}</FoodDescription>
-                  <FoodPricing>{food.formattedPrice}</FoodPricing>
+                  <FoodPricing>{formatValue(food.price)}</FoodPricing>
                 </FoodContent>
               </Food>
             ))}
